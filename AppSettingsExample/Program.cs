@@ -44,12 +44,12 @@
     /// Example overriding via environment variable:
     ///    set MYAPP_ApplicationName=NewAppName
     ///    set MYAPP_Logging__LogLevel__Default=Debug
-    ///    set MYAPP_ApiTester__SupportedMethods__2=Patch
+    ///    set MYAPP_ApiTester__SupportedMethods__4=Patch
     ///     
     /// Examples overriding via command-line:
     ///    --ApplicationName=NewAppName
     ///    --Logging:LogLevel:Default=Debug
-    ///    --ApiTester:SupportedMethods:2=Patch
+    ///    --ApiTester:SupportedMethods:4=Patch
     ///    
     ///    --ApplicationName NewAppName
     ///    /ApplicationName=NewAppName
