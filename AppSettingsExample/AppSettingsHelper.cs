@@ -3,6 +3,9 @@
     using Microsoft.Extensions.Configuration;
 
     /// <summary>
+    /// 
+    /// https://github.com/kasajian-ether/AppSettingsExample
+    /// 
     /// Loads configuration from appsettings.json file(s), environment variables, and command-line arguments.
     /// Additional settings not typically configured by default:
     /// 1. Environment variable requires an app prefix so the variable names don't conflict with other apps.
