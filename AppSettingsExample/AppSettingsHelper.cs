@@ -1,6 +1,10 @@
 ﻿namespace AppSettingsExample
 {
     using Microsoft.Extensions.Configuration;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// 
@@ -76,17 +80,24 @@
         private const string AppSettingsJsonFilenameWild = "appsettings*.json";
         private const string AdditionalAppSettingsFilePath = "AdditionalAppSettingsFilePath";
 
-        public static IConfiguration GetConfiguration(string appPrefix, IDictionary<string, string> switchMappings)
+        public static IConfiguration GetConfiguration(string appPrefix, Dictionary<string, string> switchMappings)
         {
             // Get the args array, same as what's passed into Main(string[] args) in a console app.
             var commandLineArgs = Environment.GetCommandLineArgs();
             string[] args = commandLineArgs.Length > 1 ? [.. commandLineArgs.Skip(1)] : [];
 
+            Console.WriteLine("Current directory: {0}", Directory.GetCurrentDirectory());
+
             // Get the list of appsettings json files and load each one
-            ConfigurationBuilder builder = new();
-            foreach (var appSettingsFile in GetAppSettingsFilesToLoad(appPrefix, args))
+            var appSettingsFiles = GetAppSettingsFilesToLoad(appPrefix, args)
+                .Select(Path.GetFullPath)
+                .Where(File.Exists)
+                .Distinct();
+
+            IConfigurationBuilder builder = new ConfigurationBuilder();
+            foreach (var appSettingsFile in appSettingsFiles)
             {
-                builder.AddJsonFile(appSettingsFile, optional: true, reloadOnChange: true);
+                builder = builder.AddJsonFile(appSettingsFile, optional: true, reloadOnChange: true);
                 Console.WriteLine("AppSettings file processed: {0}", appSettingsFile);
             }
 
@@ -188,7 +199,9 @@
             directory ??= Directory.GetCurrentDirectory();
 
             var filenameWithWildcard = Path.GetFileName(filepathWithWildcard);
-            return Directory.GetFiles(directory, filenameWithWildcard, SearchOption.TopDirectoryOnly);
+            var directoryFullPath = Path.GetFullPath(directory);
+            if (!Directory.Exists(directoryFullPath)) return [];
+            return Directory.GetFiles(directoryFullPath, filenameWithWildcard, SearchOption.TopDirectoryOnly);
         }
     }
 }
