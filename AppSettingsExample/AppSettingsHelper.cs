@@ -1,4 +1,4 @@
-﻿namespace AppSettingsExample
+namespace AppSettingsExample
 {
     using Microsoft.Extensions.Configuration;
     using System;
@@ -80,6 +80,14 @@
         private const string AppSettingsJsonFilenameWild = "appsettings*.json";
         private const string AdditionalAppSettingsFilePath = "AdditionalAppSettingsFilePath";
 
+        /// <summary>
+        /// Call to get configuration.  Example:
+        ///     var configuration = AppSettingsHelper.GetConfiguration("MYAPP_", []) ?? throw new InvalidOperationException();
+        /// to get back an IConfiguration object that reads settings from appsettings.json file(s), environment variables, and command-line arguments.
+        /// </summary>
+        /// <param name="appPrefix">Custom prefix for environment variables, such as "MYAPP_".  See https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-10.0#custom-prefix-for-environment-variables</param>
+        /// <param name="switchMappings">See 'Switch mappings' at https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-10.0#switch-mappings</param>
+        /// <returns></returns>
         public static IConfiguration GetConfiguration(string appPrefix, Dictionary<string, string> switchMappings)
         {
             // Get the args array, same as what's passed into Main(string[] args) in a console app.
@@ -110,7 +118,7 @@
             return configuration;
         }
 
-        public static IEnumerable<string> GetAppSettingsFilesToLoad(string appPrefix, string[] args)
+        private static IEnumerable<string> GetAppSettingsFilesToLoad(string appPrefix, string[] args)
         {
             string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string commonDocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments);
